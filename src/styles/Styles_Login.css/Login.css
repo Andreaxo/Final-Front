@@ -1,113 +1,96 @@
 @import url('https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
 
-*{
+* {
+    box-sizing: border-box; /* Asegura que el padding y los bordes no aumenten el ancho total */
     text-align: center;
+    margin: 0; 
+    padding: 0; 
 }
 
-.gowun-batang-regular {
+body {
+    /* background: linear-gradient(to bottom, #7ed0e5, #90cec5); */
     font-family: "Gowun Batang", serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-  .gowun-batang-bold {
-    font-family: "Gowun Batang", serif;
-    font-weight: 700;
-    font-style: normal;
-  }
-  
-body{
-    background-color: rgb(249, 249, 249);
-}
-
-.login_container_main{
-    font-family: "Gowun Batang", serif;
-
-    display: flex;
-    flex-direction: column; /* Organiza los elementos en columna */
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f2f5;
-    
-
 }
 
 .login_container_main {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background-color: #f0f2f5;
-  }
-  
-  .main_text {
-    flex: 1;
+    flex-direction: column; /* Para que el encabezado esté en la parte superior */
+    justify-content: flex-start; /* Alinear el contenido hacia el inicio */
+    align-items: flex-start; /* Alinear el contenido hacia la izquierda */
+    width: 100%; /* Asegura que ocupe el 100% del ancho disponible */
+    max-width: 1200px; /* Ancho máximo */
+    min-height: 100vh; /* Altura mínima */
     padding: 2rem;
-    text-align: center;
-  }
-  
-  .titulo {
-    font-size: 2rem;
+    background-color: #f0f2f500;
+}
+
+.main_text {
+    padding: 1rem;
+    width: 100%; /* Para que el texto ocupe todo el ancho */
+}
+
+.titulo {
+    font-size: 2rem; /* 32px */
     font-weight: bold;
     margin-bottom: 1rem;
-  }
-  
-  .carrusel_fotos {
-    margin-top: 2rem;
-  }
-  
-  .carousel-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-  
-  .sin_carrusel {
-    position: relative;
-    top: -20px; /* Mueve el contenedor hacia arriba */
-    padding: 2rem;
+}
+
+.container_flex {
+    display: flex; /* Cambia a flexbox para colocar sin_carrusel y carrusel_fotos uno al lado del otro */
+    width: 100%; /* Asegura que ocupe el 100% del contenedor */
+}
+
+.sin_carrusel {
+    flex: 1; /* Ocupa el espacio restante */
+    padding: 2rem; 
     background-color: #fff;
     border-radius: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    margin-bottom: 2rem;
-  }
-  
-  
-  .opt_container {
+    margin-right: 2rem; /* Espaciado a la derecha */
+}
+
+.carrusel_fotos {
+    flex: 1; /* Ocupa el espacio restante */
+    height: 100px; /* Altura del carrusel */
+}
+
+.carousel-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.opt_container {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 1fr; /* Una sola columna para los campos */
     grid-gap: 1rem;
-  }
-  
-  .tipo_id1,
-  .n_id1,
-  .fecha_n1 {
+}
+
+.tipo_id1,
+.n_id1,
+.fecha_n1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-  }
-  
-  .tipo_id1 label,
-  .n_id1 p,
-  .fecha_n1 p {
+}
+
+.tipo_id1 label,
+.n_id1 p,
+.fecha_n1 p {
     font-weight: bold;
     margin-bottom: 0.5rem;
-  }
-  
-  .tipo_id1 select,
-  .n_id1 input,
-  .fecha_n1 input {
-    width: 100%;
-  }
-  
-  .fecha_n1 button {
-    margin-top: 1rem;
-  }
+}
 
-  .btn_ingresar{
+.tipo_id1 select,
+.n_id1 input,
+.fecha_n1 input {
+    width: 100%;
+    height: 40px; /* Altura de campos */
+}
+
+.btn_ingresar {
     text-align: center;
     display: block;
-    margin: 0 auto;
-    transform: translateX(-200px);
-  }
+    margin: 1rem auto;
+    height: 40px; /* Altura de botón */
+}

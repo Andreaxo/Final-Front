@@ -1,41 +1,78 @@
-.gowun-batang-regular {
+* {
     font-family: "Gowun Batang", serif;
-    font-weight: 400;
-    font-style: normal;
-  }
-  
-  .gowun-batang-bold {
-    font-family: "Gowun Batang", serif;
-    font-weight: 700;
-    font-style: normal;
-  }
-
-*{
-    font-family: "Gowun Batang", serif;
+    box-sizing: border-box; /* Incluye el padding y borde en el cálculo de width y height */
 }
 
-.perfil_datos{
-    display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columnas de igual ancho */
-    grid-template-rows: repeat(2, 1fr); /* 2 filas de igual alto */
-    grid-gap: 20px; /* Espacio entre las piezas */
-
-    margin-top: 60px;
-}
-
-.tipo_id2, .n_id2, .nombre_completo, .fecha_n2, .sexo_biologico, .direccion_r, .n_celular, .email   {
-    border: 1px solid rgb(255, 255, 255);
-    border-radius: 10px;
-    margin: 10px;
-    padding: 5px;
-
-    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
-}
-
-.perfil_paciente{
+/* Contenedor del perfil del paciente */
+.perfil_paciente {
     border: 2px solid rgb(255, 255, 255);
     padding: 20px;
-    margin: 10px;
-    border-radius:50px;
+    margin: 20px 10px; /* Añade un margen a los lados y arriba */
+    border-radius: 50px;
     box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+    text-align: center; /* Centra el texto */
+}
+
+.imagenes{
+
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Columna mínima de 250px y ajustable */
+    
+        margin: 0 auto; /* Centrar horizontalmente el contenedor */
+        width: 100%; /* O 50%, dependiendo del ancho total que desees */
+        max-width: 600px; /* Limitar el ancho máximo del contenedor */
+        
+        justify-content: center; /* Centrar las columnas horizontalmente */
+        gap: 20px; /* Espacio entre columnas */
+}
+
+.imagenes img {
+    display: block;
+    margin: 0 auto; /* Centrar las imágenes dentro de cada columna */
+    max-width: 100%; /* Ajusta la imagen al tamaño de su contenedor */
+} 
+
+.perfil_paciente{
+    margin-left: 18rem;
+}
+
+/* Contenedor de los datos del perfil */
+.perfil_datos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Columna mínima de 250px y ajustable */
+    grid-gap: 20px; /* Espacio entre elementos */
+    margin: 20px auto; /* Centramos el contenedor horizontalmente */
+    max-width: 1200px; /* Limitar el ancho máximo */
+    padding: 20px; /* Espacio interno */
+    margin-left: 18rem;
+}
+
+/* Estilo para cada campo de los datos del perfil */
+.tipo_id2, .n_id2, .nombre_completo, .fecha_n2, .sexo_biologico, .direccion_r, .n_celular, .email {
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start; /* Alinear el contenido hacia la izquierda */
+    background-color: #f9f9f9; /* Fondo ligero para los contenedores */
+}
+
+.tipo_id2 img, .n_id2 img, .nombre_completo img, .fecha_n2 img, .sexo_biologico img, .direccion_r img, .n_celular img, .email img {
+    margin-right: 15px; /* Espacio entre la imagen y el texto */
+}
+
+.respuestas{
+    margin: 10px;
+}
+
+/* Ajustes para pantallas pequeñas */
+@media (max-width: 768px) {
+    .perfil_datos {
+        grid-template-columns: 1fr; /* Cambia a una sola columna en pantallas pequeñas */
+    }
+
+    .perfil_paciente {
+        margin: 20px 0; /* Margen más pequeño en pantallas pequeñas */
+    }
 }

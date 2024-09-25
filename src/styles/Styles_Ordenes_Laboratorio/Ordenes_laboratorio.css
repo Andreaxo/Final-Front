@@ -1,21 +1,38 @@
-
-
-.datos_usuario{
+.datos_usuario {
     display: grid;
     grid-template-columns: repeat(4, 1fr); /* 4 columnas de igual ancho */
     grid-template-rows: repeat(2, 1fr); /* 2 filas de igual alto */
-    grid-gap: 20px; /* Espacio entre las piezas */    
-
+    grid-gap: 20px; /* Espacio entre las piezas */
+    
+    margin-left: 18rem; /* Espacio para la barra lateral */
+    padding: 20px;
+    margin-top: 20px;
+    
     border: 2px solid rgb(255, 255, 255);
-    margin-top: 10px;
     border-radius: 50px;
     text-align: center;
-
-    padding: 10px;
-    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;    border-radius: 10px;
-
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
 }
 
-.tabla{
-    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;    border-radius: 10px;
+.hematologia{
+    margin-left: 18rem; /* Espacio para la barra lateral */
+}
+
+.tabla {
+    margin-left: 18rem; /* Espacio para la barra lateral */
+    margin-top: 20px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+}
+
+/* Estilo para adaptarse a pantallas pequeñas */
+@media (max-width: 768px) {
+    .datos_usuario,
+    .tabla, .hematologia {
+        margin-left: 15rem; /* Sin margen para pantallas pequeñas */
+        padding: 10px;
+        max-width: 100%; /* Ocupa todo el ancho disponible */
+    }
 }
