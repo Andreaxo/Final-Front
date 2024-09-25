@@ -1,0 +1,41 @@
+.gowun-batang-regular {
+    font-family: "Gowun Batang", serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  
+  .gowun-batang-bold {
+    font-family: "Gowun Batang", serif;
+    font-weight: 700;
+    font-style: normal;
+  }
+
+*{
+    font-family: "Gowun Batang", serif;
+}
+
+.perfil_datos{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 columnas de igual ancho */
+    grid-template-rows: repeat(2, 1fr); /* 2 filas de igual alto */
+    grid-gap: 20px; /* Espacio entre las piezas */
+
+    margin-top: 60px;
+}
+
+.tipo_id2, .n_id2, .nombre_completo, .fecha_n2, .sexo_biologico, .direccion_r, .n_celular, .email   {
+    border: 1px solid rgb(255, 255, 255);
+    border-radius: 10px;
+    margin: 10px;
+    padding: 5px;
+
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
+
+.perfil_paciente{
+    border: 2px solid rgb(255, 255, 255);
+    padding: 20px;
+    margin: 10px;
+    border-radius:50px;
+    box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+}
