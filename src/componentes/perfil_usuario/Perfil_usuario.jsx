@@ -11,24 +11,36 @@ import mapa from '../img/mapa.png';
 import celular from '../img/telefono-movil.png';
 import email from '../img/email.png';
 
-
 export const Perfil_usuario = () => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        axios.get('http://localhost:3000/api/usuarios/1')
-        .then(response => {
-            if (response.data.usuario) { // Cambié la verificación
-                setUser(response.data.usuario); // Cambié para establecer el objeto directamente
-            } else {
-                setError("No se encontraron datos de usuario.");
-            }
+        const id = sessionStorage.getItem('usuarioId'); // Obtiene el ID del usuario de sessionStorage
+
+        // Verifica si el ID existe
+        if (!id) {
+            setError("No se encontró un ID de usuario.");
             setLoading(false);
-        })
-    
-    }, []);
+            return;
+        }
+
+        // Usa el ID en la llamada a la API
+        axios.get(`http://localhost:3000/api/usuarios/${id}`)
+            .then(response => {
+                if (response.data.usuario) {
+                    setUser(response.data.usuario);
+                } else {
+                    setError("No se encontraron datos de usuario.");
+                }
+                setLoading(false);
+            })
+            .catch(err => {
+                setError("Hubo un error al obtener los datos del usuario.");
+                setLoading(false);
+            });
+    }, []); // No se necesita id como dependencia ya que se obtiene de sessionStorage
 
     if (loading) return <div>Cargando...</div>;
     if (error) return <div>{error}</div>;

@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import '../../styles/Styles_Ordenes_Laboratorio/Ordenes_laboratorio.css';
 import { Table } from "antd";
+import '../../styles/Styles_Ordenes_Laboratorio/Ordenes_laboratorio.css';
 
 export const Ordenes_laboratorio = () => {
+  const userId = sessionStorage.getItem('usuarioId'); 
   const [user, setUser] = useState(null);
   const [orden, setOrden] = useState(null);
   const [eps, setEps] = useState(null);
@@ -14,43 +15,34 @@ export const Ordenes_laboratorio = () => {
   const [loadingEps, setLoadingEps] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/api/usuarios/1')
-      .then(response => {
-        if (response.data.usuario) {
-          setUser(response.data.usuario);
-        } else {
-          setError("No se encontraron datos de usuario.");
-        }
-      })
-      .catch(error => setError(`Error al obtener los datos del usuario: ${error.message}`))
-      .finally(() => setLoadingUser(false));
-  }, []);
+    const fetchData = async () => {
+      try {
+        const [userResponse, ordenResponse, epsResponse] = await Promise.all([
+          axios.get(`http://localhost:3000/api/usuarios/${userId}`), // Usando el ID de usuario fijo
+          axios.get(`http://localhost:3000/api/orden-resultados/${userId}`), // Usando el ID de usuario fijo
+          axios.get(`http://localhost:3000/api/eps/${userId}`) // Usando el ID de usuario fijo
+        ]);
 
-  useEffect(() => {
-    axios.get('http://localhost:3000/api/orden-resultados/1')
-      .then(response => {
-        if (response.data.orden) {
-          setOrden(response.data.orden);
-        } else {
-          setError("No se encontraron datos de la orden.");
+        if (userResponse.data.usuario) setUser(userResponse.data.usuario);
+        if (ordenResponse.data.orden) {
+          const orden = ordenResponse.data.orden;
+          const pruebaResponse = await axios.get(`http://localhost:3000/api/pruebas/${userId}`);
+          if (pruebaResponse.data.prueba) {
+            setOrden({ ...orden, ...pruebaResponse.data.prueba });
+          }
         }
-      })
-      .catch(error => setError(`Error al obtener los datos de la orden: ${error.message}`))
-      .finally(() => setLoadingOrden(false));
-  }, []);
+        if (epsResponse.data.eps) setEps(epsResponse.data.eps);
+      } catch (error) {
+        setError(`Error al obtener los datos: ${error.message}`);
+      } finally {
+        setLoadingUser(false);
+        setLoadingOrden(false);
+        setLoadingEps(false);
+      }
+    };
 
-  useEffect(() => {
-    axios.get('http://localhost:3000/api/eps/1')
-      .then(response => {
-        if (response.data.eps) {
-          setEps(response.data.eps);
-        } else {
-          setError("No se encontraron datos de la EPS.");
-        }
-      })
-      .catch(error => setError(`Error al obtener los datos de la EPS: ${error.message}`))
-      .finally(() => setLoadingEps(false));
-  }, []);
+    fetchData();
+  }, []); // Dependencia de userId para que se ejecute al cambiar
 
   if (loadingUser || loadingOrden || loadingEps) return <div>Cargando...</div>;
   if (error) return <div>{error}</div>;
@@ -59,32 +51,41 @@ export const Ordenes_laboratorio = () => {
     ? `${user.nombre1 || ''} ${user.nombre2 || ''} ${user.apellido1 || ''} ${user.apellido2 || ''}`.trim() 
     : 'No especificado';
 
-  // Actualizar dataSource para incluir los datos de la orden
-  const dataSource = [
-    {
-      key: '1',
-      fecha: new Date(orden?.fecha).toLocaleDateString() || 'No especificado',
-      codigoDocumento: orden?.codigo_documento || 'No especificado',
-      numeroOrden: orden?.numero || 'No especificado',
-    },
-  ];
+  const createDataSource = (orden) => {
+    if (!orden || typeof orden !== 'object') return [];
+    
+    return [{
+      key: 1,
+      codigo: orden.id_procedimiento || 'No especificado',
+      Prueba: orden.nombre_prueba || 'No especificado',
+      resultado: orden.res_memo || orden.res_opcion || orden.res_numerico || orden.res_texto || 'No especificado',
+      referencia: 'No disponible',
+      Unidad: orden.unidad || 'No especificado',
+    }];
+  };
 
-  // Actualizar columnas para incluir los nuevos campos
+  const dataSource = createDataSource(orden);
+
   const columns = [
     {
-      title: 'Fecha de la orden',
-      dataIndex: 'fecha',
-      key: 'fecha',
+      title: 'Código del procedimiento',
+      dataIndex: 'codigo',
+      key: 'codigo',
     },
     {
-      title: 'Código del documento',
-      dataIndex: 'codigoDocumento',
-      key: 'codigoDocumento',
+      title: 'Nombre de la prueba',
+      dataIndex: 'Prueba',
+      key: 'Prueba',
     },
     {
-      title: 'Número de la orden',
-      dataIndex: 'numeroOrden',
-      key: 'numeroOrden',
+      title: 'Resultado',
+      dataIndex: 'resultado',
+      key: 'resultado',
+    },
+    {
+      title: 'Unidad',
+      dataIndex: 'Unidad',
+      key: 'Unidad',
     },
   ];
 
@@ -93,10 +94,10 @@ export const Ordenes_laboratorio = () => {
       <div className="datos_usuario">
         <div className="paciente">
           <p>Paciente</p>
-          <p className='respuestas'>{nombreCompleto || 'No especificado'}</p>
+          <p className='respuestas'>{nombreCompleto}</p>
         </div>
         <div className="telefono">
-          <p>Telefono</p>
+          <p>Teléfono</p>
           <p className='respuestas'>{user?.tel_movil || 'No especificado'}</p>
         </div>
         <div className="id">
@@ -110,7 +111,7 @@ export const Ordenes_laboratorio = () => {
         </div>
         <div className="fecha">
           <p>Fecha orden</p>
-          <p className='respuestas'>{new Date(orden?.fecha).toLocaleDateString() || 'No especificado'}</p>
+          <p className='respuestas'>{orden?.fecha ? new Date(orden.fecha).toLocaleDateString() : 'No especificado'}</p>
         </div>
         <div className="admin_salud">
           <p>Administradora de salud</p>
@@ -123,7 +124,7 @@ export const Ordenes_laboratorio = () => {
         <h2>Nombre del grupo (Hematología)</h2>
         <p>Nombre del procedimiento</p>
       </div>
-      <Table className='tabla' dataSource={dataSource} columns={columns} />
+      <Table className='tabla' dataSource={dataSource} columns={columns} pagination={false} />
       <hr />
     </>
   );

@@ -1,89 +1,148 @@
-import React from 'react';
-import { Input } from 'antd';
-import { UserOutlined, CalendarOutlined } from '@ant-design/icons';
-import Table from 'antd/lib/table';
+import React, { useState, useEffect } from 'react';
+import { Input, Table, DatePicker } from 'antd';
+import { UserOutlined } from '@ant-design/icons';
+import axios from 'axios';
+import moment from 'moment';
 import '../../styles/Styles_Home.css/Home.css';
+import { useNavigate } from 'react-router-dom';
+
+const { RangePicker } = DatePicker;
 
 export const Home = () => {
+  const navigate = useNavigate();
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filteredData, setFilteredData] = useState([]);
+  const [orderFilter, setOrderFilter] = useState('');
+  const [dateRange, setDateRange] = useState([]);
+
+  const userId = sessionStorage.getItem('usuarioId'); 
+
+  useEffect(() => {
+
+    const fetchData = async () => {
+      try {
+        const [ordenResponse, pruebaResponse] = await Promise.all([
+          axios.get(`http://localhost:3000/api/orden-resultados/${userId}`),
+          axios.get(`http://localhost:3000/api/pruebas/${userId}`)
+        ]);
+
+        const orden = ordenResponse.data.orden;
+        const prueba = pruebaResponse.data.prueba;
+
+        // Combinar los datos de orden y prueba
+        const combinedData = {
+          key: orden.id_orden,
+          fecha: moment(orden.fecha).format('DD/MM/YYYY'),
+          id_procedimiento: orden.id_procedimiento,
+          nombre_prueba: prueba.nombre_prueba,
+          codigo_prueba: prueba.codigo_prueba,
+          resultado: orden.res_opcion || orden.res_numerico || orden.res_texto || orden.res_memo
+        };
+
+        setData([combinedData]);
+        setFilteredData([combinedData]);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const filtered = data.filter(item => {
+      const orderMatch = item.id_procedimiento.toString().includes(orderFilter);
+      const itemFechaMoment = moment(item.fecha, 'DD/MM/YYYY');
+      const dateMatch =
+        dateRange.length === 0 ||
+        (dateRange[0] && dateRange[1] && itemFechaMoment.isBetween(dateRange[0], dateRange[1], 'day', '[]'));
+
+      return orderMatch && dateMatch;
+    });
+
+    setFilteredData(filtered);
+  }, [data, orderFilter, dateRange]);
+
+  const handleOrderFilterChange = (e) => {
+    setOrderFilter(e.target.value);
+  };
+
+  const handleDateRangeChange = (dates) => {
+    setDateRange(dates || []);
+  };
+
+  const handleVisualization = (record) => {
+    navigate(`/ordenes_lab/${userId}`);
+  };
+
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Fecha de la orden',
+      dataIndex: 'fecha',
+      key: 'fecha',
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'ID del procedimiento',
+      dataIndex: 'id_procedimiento',
+      key: 'id_procedimiento',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Nombre de la prueba',
+      dataIndex: 'nombre_prueba',
+      key: 'nombre_prueba',
     },
     {
-      title: 'Action',
+      title: 'Resultado',
+      dataIndex: 'resultado',
+      key: 'resultado',
+    },
+    {
+      title: 'Acción',
       dataIndex: '',
       key: 'x',
-      render: () => <a>Delete</a>,
+      render: (_, record) => <a onClick={() => handleVisualization(record)}>Visualización</a>,
     },
-  ];
-
-  const data = [
-    {
-      key: 1,
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      description: 'My name is John Brown, I am 32 years old, living in New York No. 1 Lake Park.',
-    },
-    // Resto de los datos...
   ];
 
   return (
     <div className="container">
-      <h1>Ordenes de Laboratorio</h1>
+      <h1>Órdenes de Laboratorio</h1>
       <div className="filters">
         <div className="filter-item">
-          <p>Numero de orden</p>
+          <p>Número de orden</p>
           <Input
             size="large"
-            placeholder="Ingresa tu orden de laboratorio"
+            placeholder="Ingresa el ID del procedimiento"
             prefix={<UserOutlined />}
+            onChange={handleOrderFilterChange}
           />
         </div>
         <div className="filter-item">
           <p>Rango de fecha</p>
-          <div className="date-range">
-            <Input
-              size="large"
-              type="date"
-              prefix={<CalendarOutlined />}
-            />
-            <Input
-              size="large"
-              type="date"
-              prefix={<CalendarOutlined />}
-            />
-          </div>
+          <RangePicker
+            size="large"
+            onChange={handleDateRangeChange}
+            format="DD/MM/YYYY"
+            allowEmpty={[true, true]}
+          />
         </div>
       </div>
       <div className="lab-table">
         <Table
           columns={columns}
+          dataSource={filteredData}
+          loading={loading}
           expandable={{
             expandedRowRender: (record) => (
-              <p
-                style={{
-                  margin: 0,
-                }}
-              >
-                {record.description}
+              <p style={{ margin: 0 }}>
+                Código de la prueba: {record.codigo_prueba}
               </p>
             ),
-            rowExpandable: (record) => record.name !== 'Not Expandable',
+            rowExpandable: () => true,
           }}
-          dataSource={data}
         />
       </div>
     </div>

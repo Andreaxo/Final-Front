@@ -7,6 +7,7 @@ import { Perfil_usuario } from './componentes/perfil_usuario/Perfil_usuario.jsx'
 import { Login } from './componentes/login/Login.jsx';
 import Navbar from './test/NavBar.jsx';
 import { Barra_lateral } from './componentes/ui/barra_lateral.jsx';
+import { PrivateRoute } from './router/PrivateRoute.jsx';
 
 const MainLayout = () => (
   <div>
@@ -23,13 +24,14 @@ const MainLayout = () => (
 const App = () => (
   <Router>
     <Routes>
-      <Route element={<MainLayout />}>
+      <Route element={<PrivateRoute element={<MainLayout />} />}>
         <Route path="/" element={<Home />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/Perfil_usuario" element={<Perfil_usuario />} />
-        <Route path="/ordenes_lab" element={<Ordenes_laboratorio />} />
+        <Route path="/home/" element={<Home />} />
+        <Route path="/Perfil_usuario/" element={<Perfil_usuario />} />
+        <Route path="/ordenes_lab/:id" element={<Ordenes_laboratorio />} />
       </Route>
       <Route path="/login" element={<Login />} />
+      <Route path="/logout" element={<Login />} />
     </Routes>
   </Router>
 );
